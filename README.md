@@ -1,0 +1,140 @@
+# Kaggle MCP Server
+
+A small MCP (Model Context Protocol) server that lets Claude **search**, **inspect**, and **download** datasets from Kaggle. You just talk to Claude in plain English, and Claude calls the tools for you.
+
+Built with Python, [FastMCP](https://gofastmcp.com), and the Kaggle API.
+
+---
+
+## What can it do?
+
+| Tool | What it does | Input |
+|---|---|---|
+| `search_datasets` | Searches Kaggle for datasets by keyword | `query`, optional `max_results` (default 5) |
+| `list_dataset_files` | Shows the files inside a dataset | `dataset` as `owner/dataset-name` |
+| `download_dataset` | Downloads and unzips a dataset to your computer | `dataset` as `owner/dataset-name` |
+
+Downloaded datasets are saved in their own folder, named `owner_dataset-name`.
+Example: `E:/kaggle-datasets/uciml_red-wine-quality-cortez-et-al-2009/winequality-red.csv`
+
+---
+
+## Requirements
+
+- Python 3.10 or newer
+- [uv](https://docs.astral.sh/uv/) (a fast Python package manager)
+- A free Kaggle account and a Kaggle API token
+- [Claude Desktop](https://claude.ai/download) (to use the server from chat)
+
+---
+
+## Setup
+
+### 1. Get your Kaggle API token
+
+1. Log in to [kaggle.com](https://www.kaggle.com).
+2. Go to **Settings** and find the **API** section.
+3. Create a new token and copy it.
+
+### 2. Install the project
+
+```bash
+cd kaggle-server-mcp
+uv add fastmcp kaggle python-dotenv
+```
+
+### 3. Add your token
+
+Create a file named `.env` in the project folder:
+
+```
+KAGGLE_API_TOKEN=your_token_here
+```
+
+> **Important:** Never share your token or upload `.env` to GitHub. Add `.env` to your `.gitignore` file.
+
+---
+
+## Test it locally (MCP Inspector)
+
+Before connecting to Claude, check that the tools work:
+
+```bash
+uv run fastmcp dev main.py
+```
+
+This opens MCP Inspector in your browser. Open the **Tools** tab and try each tool:
+
+1. `search_datasets` with a query like `wine quality`
+2. `list_dataset_files` with a dataset like `uciml/red-wine-quality-cortez-et-al-2009`
+3. `download_dataset` with the same dataset
+
+> If your server file is not called `main.py`, use your file name instead.
+
+---
+
+## Add it to Claude Desktop
+
+1. Open Claude Desktop, then go to **Settings > Developer > Edit Config**.
+2. This opens `claude_desktop_config.json`. Add this inside `mcpServers`:
+
+```json
+{
+  "mcpServers": {
+    "KaggleDatasets": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "D:\\Multiple Projects\\kaggle-server-mcp",
+        "run",
+        "main.py"
+      ]
+    }
+  }
+}
+```
+
+3. Save the file and **fully restart** Claude Desktop (quit it from the system tray, then open it again).
+4. You should now see the Kaggle tools available in a new chat.
+
+---
+
+## How to use it
+
+Just ask Claude. Examples:
+
+- "Search Kaggle for wine quality datasets."
+- "Show me the files inside `uciml/red-wine-quality-cortez-et-al-2009`."
+- "Download the first Titanic dataset from Kaggle."
+- "Search for 5 different datasets on Kaggle and download them."
+
+---
+
+## Rate limits
+
+Kaggle can slow you down (a `429 Too Many Requests` error) if you send too many requests too quickly. Normal use is fine. If you download many datasets in a loop, add a short delay between requests. If you see a 429 error, wait a bit and try again.
+
+---
+
+## Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| `401 Unauthorized` or authentication error | Your token is wrong or expired. Create a new one and update `.env`. |
+| Token not loading | Make sure `.env` is in the project folder and the code loads it before importing Kaggle. |
+| Tools don't show up in Claude Desktop | Check the path in `claude_desktop_config.json`, then restart Claude Desktop fully. |
+| `429 Too Many Requests` | Wait a few minutes and retry. |
+| Download fails or file is missing | Check that you have disk space and the output folder exists. |
+
+---
+
+## Project ideas for later
+
+- Make the server **remote** (HTTP transport) so other people can use it too.
+- Add a tool to preview the first rows of a downloaded CSV.
+
+---
+
+## License
+
+Add your preferred license here (for example, MIT).
