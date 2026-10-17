@@ -86,10 +86,27 @@ This opens MCP Inspector in your browser. Open the **Tools** tab and try each to
 
 ---
 
+
 ## Add it to Claude Desktop
 
-1. Open Claude Desktop, then go to **Settings > Developer > Edit Config**.
-2. This opens `claude_desktop_config.json`. Add this inside `mcpServers`:
+You can connect the Kaggle MCP Server to Claude Desktop using either of the following methods.
+
+### Option 1: Install using FastMCP (Recommended)
+
+Run this command from your project folder:
+
+```bash
+uv run fastmcp install mcp-json main.py
+```
+
+Follow any prompts shown by the command, then restart Claude Desktop if required.
+
+> If your server file is not called `main.py`, replace it with your actual Python file name.
+
+### Option 2: Configure Claude Desktop manually
+
+1. Open Claude Desktop and go to **Settings > Developer > Edit Config**.
+2. This opens `claude_desktop_config.json`. Add the following configuration inside the file:
 
 ```json
 {
@@ -107,10 +124,11 @@ This opens MCP Inspector in your browser. Open the **Tools** tab and try each to
 }
 ```
 
-Replace `D:\\path\\to\\Kaggle-MCP-Server` with the actual absolute path to your local repository folder.
+3. Replace `D:\\path\\to\\Kaggle-MCP-Server` with the actual absolute path to your local repository folder.
+4. Save the file and **fully restart** Claude Desktop (quit it from the system tray, then open it again).
+5. Open a new chat and check that the Kaggle MCP tools are available.
 
-3. Save the file and **fully restart** Claude Desktop (quit it from the system tray, then open it again).
-4. You should now see the Kaggle tools available in a new chat.
+> **Note:** Choose either Option 1 or Option 2. You do not need to use both methods.
 
 ---
 
