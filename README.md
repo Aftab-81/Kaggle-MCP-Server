@@ -73,7 +73,7 @@ DOWNLOAD_DIR=D:/kaggle-datasets
 Before connecting to Claude, check that the tools work:
 
 ```bash
-uv run fastmcp dev main.py
+uv run fastmcp dev inspector main.py
 ```
 
 This opens MCP Inspector in your browser. Open the **Tools** tab and try each tool:
