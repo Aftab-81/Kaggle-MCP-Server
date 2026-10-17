@@ -15,13 +15,18 @@ Built with Python, [FastMCP](https://gofastmcp.com), and the Kaggle API.
 | `download_dataset` | Downloads and unzips a dataset to your computer | `dataset` as `owner/dataset-name` |
 
 Downloaded datasets are saved in their own folder, named `owner_dataset-name`.
-Example: `E:/kaggle-datasets/uciml_red-wine-quality-cortez-et-al-2009/winequality-red.csv`
+
+**Default download location on Windows:** `C:/Users/<your-username>/kaggle-datasets/`
+
+Example: `C:/Users/<your-username>/kaggle-datasets/uciml_red-wine-quality-cortez-et-al-2009/winequality-red.csv`
+
+You can change the download location by adding `DOWNLOAD_DIR` to your `.env` file. For example, `DOWNLOAD_DIR=D:/kaggle-datasets` saves datasets under `D:/kaggle-datasets/`.
 
 ---
 
 ## Requirements
 
-- Python 3.10 or newer
+- Python 3.11 or newer
 - [uv](https://docs.astral.sh/uv/) (a fast Python package manager)
 - A free Kaggle account and a Kaggle API token
 - [Claude Desktop](https://claude.ai/download) (to use the server from chat)
@@ -38,8 +43,10 @@ Example: `E:/kaggle-datasets/uciml_red-wine-quality-cortez-et-al-2009/winequalit
 
 ### 2. Install the project
 
+Open a terminal in the cloned repository folder:
+
 ```bash
-cd kaggle-server-mcp
+cd Kaggle-MCP-Server
 uv add fastmcp kaggle python-dotenv
 ```
 
@@ -47,8 +54,14 @@ uv add fastmcp kaggle python-dotenv
 
 Create a file named `.env` in the project folder:
 
-```
+```env
 KAGGLE_API_TOKEN=your_token_here
+```
+
+To choose a custom dataset download folder, you can also add this line:
+
+```env
+DOWNLOAD_DIR=D:/kaggle-datasets
 ```
 
 > **Important:** Never share your token or upload `.env` to GitHub. Add `.env` to your `.gitignore` file.
@@ -85,7 +98,7 @@ This opens MCP Inspector in your browser. Open the **Tools** tab and try each to
       "command": "uv",
       "args": [
         "--directory",
-        "D:\\Multiple Projects\\kaggle-server-mcp",
+        "D:\\path\\to\\Kaggle-MCP-Server",
         "run",
         "main.py"
       ]
@@ -93,6 +106,8 @@ This opens MCP Inspector in your browser. Open the **Tools** tab and try each to
   }
 }
 ```
+
+Replace `D:\\path\\to\\Kaggle-MCP-Server` with the actual absolute path to your local repository folder.
 
 3. Save the file and **fully restart** Claude Desktop (quit it from the system tray, then open it again).
 4. You should now see the Kaggle tools available in a new chat.
@@ -124,7 +139,7 @@ Kaggle can slow you down (a `429 Too Many Requests` error) if you send too many 
 | Token not loading | Make sure `.env` is in the project folder and the code loads it before importing Kaggle. |
 | Tools don't show up in Claude Desktop | Check the path in `claude_desktop_config.json`, then restart Claude Desktop fully. |
 | `429 Too Many Requests` | Wait a few minutes and retry. |
-| Download fails or file is missing | Check that you have disk space and the output folder exists. |
+| Download fails or file is missing | Check that you have disk space, Kaggle access, and permission to write to the download folder. If you set `DOWNLOAD_DIR`, confirm that the path is valid. |
 
 ---
 
@@ -137,4 +152,4 @@ Kaggle can slow you down (a `429 Too Many Requests` error) if you send too many 
 
 ## License
 
-Add your preferred license here (for example, MIT).
+This repository includes an MIT license. See [`LICENSE`](LICENSE) for the license text.
